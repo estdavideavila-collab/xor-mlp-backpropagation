@@ -1,4 +1,4 @@
-"""Interfaz gráfica: configuración, entrenamiento animado, gráficas, validación de salidas y prueba de la red."""
+"""Ventana tkinter: configuración, entrenamiento animado, gráficas y prueba de la red."""
 
 import sys
 import tkinter as tk
@@ -22,7 +22,7 @@ GRIS = "#6b665c"
 
 
 def carpeta_base():
-    """Carpeta del .exe cuando está empaquetado; raíz del proyecto cuando se corre con Python."""
+    """Carpeta del .exe empaquetado o raíz del proyecto."""
     if getattr(sys, "frozen", False):
         return Path(sys.executable).resolve().parent
     return Path(__file__).resolve().parent.parent
@@ -84,7 +84,7 @@ class App(tk.Tk):
         self.protocol("WM_DELETE_WINDOW", self._cerrar)
         self.inicializar()
 
-    # ------------------------------------------------------------------ construcción de la ventana
+    # --- Construcción de la ventana ---
 
     def _construir(self):
         estilo = ttk.Style(self)
@@ -123,6 +123,8 @@ class App(tk.Tk):
         self._pestana_datos()
         self._pestana_prueba()
         self._pestana_pesos()
+
+    # --- Panel izquierdo ---
 
     def _panel_configuracion(self, padre):
         marco = ttk.LabelFrame(padre, text="Configuración", padding=10)
@@ -192,6 +194,8 @@ class App(tk.Tk):
         self.lbl_aciertos = etiquetas["Patrones correctos"]
         ttk.Label(marco, text="Una salida ≥ 0.5 se toma como 1; menor, como 0.",
                   style="Sub.TLabel").grid(row=3, column=0, columnspan=2, sticky="w", pady=(6, 0))
+
+    # --- Pestañas ---
 
     def _pestana_red(self):
         marco = ttk.Frame(self.pestanas, padding=8)
@@ -268,7 +272,7 @@ class App(tk.Tk):
         self.txt_pesos = tk.Text(marco, font=("Consolas", 11), relief="flat", padx=12, pady=10, wrap="none")
         self.txt_pesos.pack(fill="both", expand=True)
 
-    # ------------------------------------------------------------------ acciones
+    # --- Acciones de los botones ---
 
     def _leer_configuracion(self):
         try:
@@ -297,7 +301,7 @@ class App(tk.Tk):
             return None
 
     def inicializar(self):
-        """Crea los pesos iniciales con la configuración escrita y deja la red lista para entrenar."""
+        """Pesos iniciales con la configuración escrita."""
         self._detener()
         config = self._configuracion_valida()
         if config is None:
@@ -306,7 +310,7 @@ class App(tk.Tk):
         self.refrescar()
 
     def _preparar_entrenamiento(self):
-        """Comprueba que la red esté lista y que la configuración escrita sea la que se está usando."""
+        """Valida backprop y configuración antes de entrenar."""
         if not backprop_disponible():
             messagebox.showerror("Falta la retropropagación", mensaje_backprop_faltante(), parent=self)
             return False
@@ -339,6 +343,7 @@ class App(tk.Tk):
         self._ciclo()
 
     def _ciclo(self):
+        """Un cuadro del entrenamiento animado."""
         self.ent.avanzar(int(self.var_velocidad.get()))
         self.refrescar()
         if self.ent.terminado:
@@ -421,7 +426,7 @@ class App(tk.Tk):
             f"Pesos de la época {self.ent.epocas}.",
         ]))
 
-    # ------------------------------------------------------------------ refresco de la vista
+    # --- Refresco de la vista ---
 
     def refrescar(self):
         e = self.ent

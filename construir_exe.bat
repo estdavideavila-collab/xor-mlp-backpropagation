@@ -1,5 +1,5 @@
 @echo off
-REM Genera dist\XOR_PerceptronMulticapa.exe (un solo archivo, sin consola, con sus librerias adentro).
+REM Genera dist\XOR_PerceptronMulticapa.exe (un archivo, sin consola).
 REM Requiere una vez: pip install -r requirements.txt pyinstaller
 cd /d "%~dp0"
 python -m PyInstaller --noconfirm --clean --onefile --windowed ^

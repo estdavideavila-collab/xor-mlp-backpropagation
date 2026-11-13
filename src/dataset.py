@@ -1,8 +1,8 @@
-"""Conjunto de datos del XOR y orden en que los patrones ingresan al entrenamiento."""
+"""Dataset del XOR y orden de ingreso de los patrones."""
 
 import numpy as np
 
-# Tabla de verdad del XOR: la salida es 1 solo cuando las dos entradas son distintas.
+# Tabla de verdad del XOR
 ENTRADAS = np.array([
     [0, 0],
     [0, 1],
@@ -29,11 +29,7 @@ def nombre_patron(indice):
 
 
 def orden_de_ingreso(modo, generador):
-    """Índices de los patrones en el orden en que entran a la red durante una época.
-
-    Secuencial: siempre (0,0) -> (0,1) -> (1,0) -> (1,1), como en la tabla de verdad.
-    Aleatorio por época: los cuatro patrones se barajan al iniciar cada época.
-    """
+    """Índices de los patrones en el orden de ingreso de una época."""
     indices = np.arange(len(ENTRADAS))
     if modo == ORDEN_ALEATORIO:
         generador.shuffle(indices)
@@ -41,7 +37,7 @@ def orden_de_ingreso(modo, generador):
 
 
 def describir_orden(modo):
-    """Frase corta del orden de ingreso para la interfaz y el informe."""
+    """Orden de ingreso en texto, para la interfaz y el informe."""
     if modo == ORDEN_ALEATORIO:
         return "Aleatorio: los 4 patrones se barajan al iniciar cada época"
     return "Secuencial: " + " -> ".join(nombre_patron(i) for i in range(len(ENTRADAS)))

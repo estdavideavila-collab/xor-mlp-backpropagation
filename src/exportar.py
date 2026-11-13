@@ -1,4 +1,4 @@
-"""Exporta los resultados de un entrenamiento: tablas en Markdown, CSV del error e imágenes."""
+"""Exporta resultados: resultados.md, CSV del MSE e imágenes."""
 
 import csv
 from datetime import datetime
@@ -18,6 +18,8 @@ ARCHIVOS = (
     "red_pesos_iniciales.png", "red_pesos_finales.png", "frontera_decision.png",
 )
 
+
+# --- Texto de resultados.md ---
 
 def _f(valor, decimales=DEC_PESO):
     return f"{valor:.{decimales}f}"
@@ -131,6 +133,8 @@ los pesos de ese momento: MSE = (1/4) · Σ (d − y)².
 """
 
 
+# --- Escritura de archivos ---
+
 def _guardar_figura(dibujar, ruta, tamano):
     fig = Figure(figsize=tamano, dpi=150)
     ax = fig.add_subplot(111)
@@ -140,7 +144,7 @@ def _guardar_figura(dibujar, ruta, tamano):
 
 
 def exportar_todo(ent, carpeta):
-    """Escribe todos los archivos de resultados en la carpeta y devuelve su ruta."""
+    """Escribe todos los archivos de resultados y devuelve la carpeta."""
     carpeta = Path(carpeta)
     carpeta.mkdir(parents=True, exist_ok=True)
 
@@ -152,6 +156,7 @@ def exportar_todo(ent, carpeta):
         for epoca, mse in enumerate(ent.historial_mse):
             escritor.writerow([epoca, f"{mse:.10f}"])
 
+    # Gráficas del error y de la red
     objetivo = ent.config.mse_objetivo
     _guardar_figura(lambda ax: dibujar_error(ax, ent.historial_mse, objetivo, escala_log=True),
                     carpeta / "grafica_error.png", (8, 4.5))
@@ -162,6 +167,7 @@ def exportar_todo(ent, carpeta):
     _guardar_figura(lambda ax: dibujar_red(ax, ent.pesos, f"Red con pesos finales (época {ent.epocas})"),
                     carpeta / "red_pesos_finales.png", (7, 3.9))
 
+    # Regiones de decisión: inicial y final
     fig = Figure(figsize=(9, 4.4), dpi=150)
     ax_inicial, ax_final = fig.subplots(1, 2)
     dibujar_frontera(ax_inicial, ent.pesos_iniciales, "Con pesos iniciales")

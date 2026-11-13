@@ -1,7 +1,4 @@
-"""Gráfica del error, diagrama de la red con sus pesos y regiones de decisión.
-
-Los usa la interfaz y la exportación de resultados.
-"""
+"""Curva del MSE, diagrama de la red y regiones de decisión."""
 
 import numpy as np
 from matplotlib.lines import Line2D
@@ -52,10 +49,10 @@ def _neurona(ax, nombre, sesgo=None, sesgo_arriba=False):
 
 
 def dibujar_red(ax, pesos, titulo):
-    """Diagrama 2-2-1 con el valor de cada peso sobre su conexión y el sesgo junto a cada neurona."""
+    """Diagrama 2-2-1 con pesos y sesgos."""
     ax.clear()
     W1, b1, W2, b2 = pesos.como_tupla()
-    # Las conexiones cruzadas (x1->h2 y x2->h1) llevan la etiqueta cerca del origen para no encimarse.
+    # Cruzadas: etiqueta cerca del origen para que no se encimen
     _conexion(ax, "x1", "h1", W1[0, 0], 0.5, 0.045)
     _conexion(ax, "x1", "h2", W1[0, 1], 0.24, 0.0)
     _conexion(ax, "x2", "h1", W1[1, 0], 0.24, 0.0)
@@ -77,7 +74,7 @@ def dibujar_red(ax, pesos, titulo):
 
 
 def dibujar_error(ax, historial_mse, mse_objetivo, escala_log=True):
-    """Curva del MSE contra las épocas, con la línea del objetivo de parada."""
+    """Curva del MSE por época con la línea del objetivo."""
     ax.clear()
     epocas = range(len(historial_mse))
     ax.plot(epocas, historial_mse, color=COLOR_CURVA, linewidth=1.8, label="MSE por época")
@@ -103,10 +100,7 @@ def dibujar_error(ax, historial_mse, mse_objetivo, escala_log=True):
 
 
 def dibujar_frontera(ax, pesos, titulo):
-    """Salida de la red en todo el plano (x1, x2) y los 4 patrones del XOR encima.
-
-    Zona azul: la red responde cerca de 1. Zona roja: responde cerca de 0. Línea negra: y = 0.5.
-    """
+    """Salida de la red en el plano (x1, x2) con los 4 patrones encima."""
     ax.clear()
     malla = np.linspace(-0.25, 1.25, 151)
     xx, yy = np.meshgrid(malla, malla)

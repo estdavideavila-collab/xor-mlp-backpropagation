@@ -1,10 +1,4 @@
-"""Punto de entrada de la app XOR con perceptrón multicapa.
-
-    python src/main.py                         abre la ventana
-    python src/main.py --resultados            entrena con la configuración por defecto y guarda
-                                               pesos, épocas, iteraciones, error y gráficas en resultados/
-    python src/main.py --resultados CARPETA    lo mismo, en otra carpeta
-"""
+"""Punto de entrada: abre la ventana o, con --resultados [CARPETA], entrena y exporta."""
 
 import argparse
 import sys
@@ -35,7 +29,7 @@ def generar_resultados(carpeta):
 
 
 def abrir_ventana():
-    try:  # Texto nítido en pantallas con escalado de Windows
+    try:  # Texto nítido con escalado de Windows
         import ctypes
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
     except (AttributeError, OSError):
